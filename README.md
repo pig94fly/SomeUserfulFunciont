@@ -5,3 +5,5 @@ delete file or directory
 calculate lunar calendar
 ### Varification Code Picture
 varification code picture
+### UTF-8 SubStr
+utf-8 substr function
