@@ -1,0 +1,59 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: zzq
+ * Date: 18-8-20
+ * Time: 上午9:24
+ */
+
+$num = 65;
+
+$str = '朱朱朱☁bc';
+
+echo utf8SubStr($str,1,4);
+
+function utf8SubStr($str, $start, $len=null){
+    //当前字符指针
+    $byteLoca = 0;
+    //字符字节数
+    $strLen = strlen($str);
+    //定义返回字符
+    $subStr = '';
+    //计算开始时的字符指针
+    for ($i=0;$i<$start;$i++){
+        if ($byteLoca>=$strLen)
+            return '';
+        $byteLoca += getByteNum(substr($str, $byteLoca, 1));
+    }
+    //len为null返回开始到最后所有字符
+    if ($len == null)
+        return substr($str, $byteLoca);
+    //len不为null
+    for ($i=0;$i<$len;$i++){
+        $subNum = getByteNum(substr($str, $byteLoca, 1));
+        //超过字符数返回
+        if ($subNum+$byteLoca>$strLen)
+            return $subStr;
+        $subStr .= substr($str, $byteLoca, $subNum);
+        $byteLoca += $subNum;
+    }
+    return $subStr;
+}
+
+//当前字符的字节数
+function getByteNum($byte)
+{
+    $bin = ord($byte);
+    if ($bin<128)
+        return 1;
+    elseif (($bin&224)==192)
+        return 2;
+    elseif (($bin&240)==224)
+        return 3;
+    elseif (($bin&248)==240)
+        return 4;
+    elseif (($bin&152)==248)
+        return 5;
+    else
+        return 6;
+}
